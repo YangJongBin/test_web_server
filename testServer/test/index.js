@@ -32,7 +32,7 @@ app.use(function(req, res, next) {
 
 app.use(express.static(path.resolve(DIST_DIR)));
 
-//TODO: 세션 정보 인증 
+//TODO: 세션 정보 인증
 app.post('/auth', (req, res) => {
   console.dir(req.sessionID);
 
@@ -48,11 +48,13 @@ app.post('/auth', (req, res) => {
     returnUserInfo.contents = {
       main_seq: 1,
       user_name: '관리자',
-      grade: 'manager',
+      grade: 'manager'
     };
-    res.json(returnUserInfo);
+    setTimeout(() => {
+      res.json(returnUserInfo);
+    }, 2000);
+    // res.status(500);
   }
-
 });
 
 // app.post('/auth', (req, res) => {
