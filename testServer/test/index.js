@@ -65,7 +65,7 @@ app.post(['/auth'], (req, res) => {
             inclinedSolar: _.random(0, 100), // 경사 일사량,
             ws: _.random(0, 100), // 풍속
             temp: _.random(0, 100), // 온도
-            wf: _.random(1, 10) // 날씨
+            wf: _.random(1, 7) // 날씨
           },
           nowPower: _.random(0, 10), //현재발전량 = 현재출력
           dailyPower: _.random(0, 100), //금일발전량
@@ -266,9 +266,13 @@ app.get(['./trend'], (req, res) => {
     isError: 1,
     trendDataList: [
       {
-        mainSeq: '',
-        placeName: '',
-        dataInfo: {}
+        dataInfo: {
+          //TODO: 일사량 정보
+          //TODO: 조도 정보
+          //TODO: 양액 농도 정보
+          //TODO: 온도 정보
+          //TODO: 풍속 정보
+        }
       }
     ]
   };
