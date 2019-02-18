@@ -264,7 +264,7 @@ app.get(['/main'], (req, res) => {
   res.json(returnResInfo);
 });
 
-app.get(['./trend'], (req, res) => {
+app.get(['/trend', '/trend/0', '/trend/1'], (req, res) => {
   const returnResInfo = {
     trendDataList: []
   };
@@ -272,10 +272,23 @@ app.get(['./trend'], (req, res) => {
   returnResInfo.trendDataList = [
     {
       //TODO: 일사량 정보
+      solarChartInfo: {},
       //TODO: 조도 정보
+      luxChartInfo: {},
       //TODO: 양액 농도 정보
+      waterValueChartInfo: {},
       //TODO: 온도 정보
+      temperatureChartInfo: {},
+      //TODO: 습도 정보
+      rehChartInfo: {},
       //TODO: 풍속 정보
+      windSpeedChartInfo: {},
+      //TODO: 이산화탄소 정보
+      co2ChartInfo: {},
+      //TODO: 시간당 강우량 정보
+      r1ChartInfo: {},
+      //TODO: 강우 감지 여부 정보
+      isRainChartInfo: {}
     }
   ];
 
