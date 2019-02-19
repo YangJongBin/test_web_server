@@ -33,264 +33,95 @@ app.use(function(req, res, next) {
 
 app.use(express.static(path.resolve(DIST_DIR)));
 
-//TODO: 세션 정보 인증
 app.post(['/auth'], (req, res) => {
   console.dir(req.sessionID);
 
   const returnResInfo = {
-    isError: 1,
     userInfo: {}
   };
 
   //FIXME: 세션아이디 확인
-  if (req.sessionID) {
-    returnResInfo.isError = 0;
+  if (true) {
     returnResInfo.userInfo = {
-      //TODO: 결과는 유저에 대한 정보를 받아오면된다.
-      userInfo: {
-        user_name: '관리자',
-        grade: 'manager'
-      }
+      user_name: '관리자',
+      mainSeq: '0',
+      grade: 'manager'
     };
 
     res.json(returnResInfo);
   }
 });
 
-app.get(['/main'], (req, res) => {
+app.get(['/main', '/main/0'], (req, res) => {
+  console.log('Request!!!');
   const returnResInfo = {
-    mainDataList: []
+    mainDataInfo: {
+      placeList: [{}],
+      placeDataInfo: {},
+      selectedMainSeq: ''
+    }
   };
 
-  returnResInfo.mainDataList = [
+  returnResInfo.mainDataInfo.placeList = [
     {
       //FIXME: 일단 생각없이 적어보자 ㅡㅡ..
       //TODO: 장소 정보 (mainSeq, placeName, company, amount) or siteName?
-      mainSeq: '0',
       placeName: '6kW급 테스트베드 (나주)',
-      dataInfo: {
-        environmentInfo: {
-          inclinedSolar: _.random(0, 100), // 경사 일사량,
-          ws: _.random(0, 100), // 풍속
-          temp: _.random(0, 100), // 온도
-          wf: _.random(1, 7) // 날씨
-        },
-        nowPower: _.random(0, 10), //현재발전량 = 현재출력
-        dailyPower: _.random(0, 100), //금일발전량
-        monthPower: _.random(0, 100), //당월발전량
-        comulativePower: _.random(0, 100), //누적발전량
-        //농지 현황 그래프 데이터
-        farmlandStatusGraphConfig: {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: ''
-          },
-          xAxis: {
-            categories: ['토양', '외기'],
-            crosshair: true
-          },
-          yAxis: [
-            {
-              labels: {
-                format: '{value} °C'
-              },
-              title: {
-                text: '온도'
-              },
-              min: -10,
-              max: 40,
-              tickInterval: 10
-            },
-            {
-              labels: {
-                format: '{value} %'
-              },
-              title: {
-                text: '습도'
-              },
-              min: 0,
-              max: 100,
-              tickInterval: 20,
-              opposite: 1
-            }
-          ],
-          tooltip: {
-            shared: true,
-            useHTML: true
-          },
-          plotOptions: {
-            column: {
-              pointPadding: 0.2,
-              borderWidth: 0
-            },
-            series: {
-              threshold: -20
-            }
-          },
-          series: [
-            {
-              name: '온도',
-              data: [10, 0],
-              color: 'red',
-              tooltip: {
-                valueSuffix: ' °C'
-              }
-            },
-            {
-              name: '습도',
-              data: [0, 0],
-              yAxis: 1,
-              tooltip: {
-                valueSuffix: ' %'
-              }
-            },
-            {
-              name: '수분',
-              data: [0],
-              yAxis: 1,
-              tooltip: {
-                valueSuffix: ' %'
-              }
-            }
-          ],
-          credits: {
-            enabled: false
-          }
-        }
-      }
+      mainSeq: '0'
     },
     {
       //FIXME: 일단 생각없이 적어보자 ㅡㅡ..
       //TODO: 장소 정보 (mainSeq, placeName, company, amount) or siteName?
-      mainSeq: '1',
-      placeName: '16kW급 테스트베드 (나주)',
-      dataInfo: {
-        environmentInfo: {
-          inclinedSolar: 0, // 경사 일사량,
-          ws: 0, // 풍속
-          temp: 0, // 온도
-          wf: 3 // 날씨
-        },
-        nowPower: _.random(0, 100), //현재발전량 = 현재출력
-        dailyPower: 0, //금일발전량
-        monthPower: 0, //당월발전량
-        comulativePower: 0, //누적발전량
-        //농지 현황 그래프 데이터
-        farmlandStatusGraphData: {
-          chart: {
-            type: 'column'
-          },
-          title: {
-            text: ''
-          },
-          xAxis: {
-            categories: ['토양', '외기'],
-            crosshair: true
-          },
-          yAxis: [
-            {
-              labels: {
-                format: '{value} °C'
-              },
-              title: {
-                text: '온도'
-              },
-              min: -10,
-              max: 40,
-              tickInterval: 10
-            },
-            {
-              labels: {
-                format: '{value} %'
-              },
-              title: {
-                text: '습도'
-              },
-              min: 0,
-              max: 100,
-              tickInterval: 20,
-              opposite: 1
-            }
-          ],
-          tooltip: {
-            shared: true,
-            useHTML: true
-          },
-          plotOptions: {
-            column: {
-              pointPadding: 0.2,
-              borderWidth: 0
-            },
-            series: {
-              threshold: -20
-            }
-          },
-          series: [
-            {
-              name: '온도',
-              data: [10, 0],
-              color: 'red',
-              tooltip: {
-                valueSuffix: ' °C'
-              }
-            },
-            {
-              name: '습도',
-              data: [0, 0],
-              yAxis: 1,
-              tooltip: {
-                valueSuffix: ' %'
-              }
-            },
-            {
-              name: '수분',
-              data: [0],
-              yAxis: 1,
-              tooltip: {
-                valueSuffix: ' %'
-              }
-            }
-          ],
-          credits: {
-            enabled: false
-          }
-        }
-      }
+      placeName: '12kW급 테스트베드 (목포)',
+      mainSeq: '1'
     }
   ];
+  returnResInfo.mainDataInfo.placeDataInfo = {
+    powerGenerationInfo: {
+      currKw: _.random(0, 10), //현재발전량 = 현재출력
+      dailyPower: _.random(0, 100), //금일발전량
+      monthPower: _.random(0, 100), //당월발전량
+      comulativePower: _.random(0, 100) //누적발전량
+    },
+    headerEnv: {
+      inclinedSolar: _.random(0, 100), // 경사 일사량,
+      ws: _.random(0, 100), // 풍속
+      temp: _.random(0, 100), // 기온
+      wf: _.random(1, 7) // 날씨
+    },
+    //농지 현황 그래프 데이터
+    growthEnv: {}
+  };
+  returnResInfo.mainDataInfo.selectedMainSeq = '0';
 
   res.json(returnResInfo);
 });
 
 app.get(['/trend', '/trend/0', '/trend/1'], (req, res) => {
   const returnResInfo = {
-    trendDataList: []
+    trendDataList: {}
   };
 
-  returnResInfo.trendDataList = [
-    {
-      //TODO: 일사량 정보
-      solarChartInfo: {},
-      //TODO: 조도 정보
-      luxChartInfo: {},
-      //TODO: 양액 농도 정보
-      waterValueChartInfo: {},
-      //TODO: 온도 정보
-      temperatureChartInfo: {},
-      //TODO: 습도 정보
-      rehChartInfo: {},
-      //TODO: 풍속 정보
-      windSpeedChartInfo: {},
-      //TODO: 이산화탄소 정보
-      co2ChartInfo: {},
-      //TODO: 시간당 강우량 정보
-      r1ChartInfo: {},
-      //TODO: 강우 감지 여부 정보
-      isRainChartInfo: {}
-    }
-  ];
+  returnResInfo.trendDataList = {
+    //TODO: 일사량 정보
+    solarChartInfo: {},
+    //TODO: 조도 정보
+    luxChartInfo: {},
+    //TODO: 양액 농도 정보
+    waterValueChartInfo: {},
+    //TODO: 온도 정보
+    temperatureChartInfo: {},
+    //TODO: 습도 정보
+    rehChartInfo: {},
+    //TODO: 풍속 정보
+    windSpeedChartInfo: {},
+    //TODO: 이산화탄소 정보
+    co2ChartInfo: {},
+    //TODO: 시간당 강우량 정보
+    r1ChartInfo: {},
+    //TODO: 강우 감지 여부 정보
+    isRainChartInfo: {}
+  };
 
   res.json(returnResInfo);
 });
