@@ -53,7 +53,7 @@ app.post(['/auth/login'], (req, res) => {
   }
 });
 
-app.get(['/main', '/main/0'], (req, res) => {
+app.get(['/main', '/main/0', '/main/1'], (req, res) => {
   console.log('MIAN_REQUEST');
   const returnResInfo = {
     headerInfo: {
@@ -97,10 +97,8 @@ app.get(['/main', '/main/0'], (req, res) => {
   returnResInfo.containerInfo.growthEnv = {};
 
   //FIXME:
-  setTimeout(() => {
-    res.json(returnResInfo);
-    // res.status(500).send('error');
-  }, 4000);
+  res.json(returnResInfo);
+  // res.status(500).send('error');
 });
 
 app.get(['/trend', '/trend/0', '/trend/1'], (req, res) => {
