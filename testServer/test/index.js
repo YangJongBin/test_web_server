@@ -9,6 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 const DIST_DIR = __dirname;
 const PORT = 8080;
+let testSession;
 
 app.use(
   session({
@@ -35,26 +36,29 @@ app.use(express.static(path.resolve(DIST_DIR)));
 
 app.post(['/auth/login'], (req, res) => {
   console.log('LOGIN_REQUEST');
+  const { userId, password } = req.body;
+  console.log(req.body);
   const returnResInfo = {
     userInfo: {}
   };
 
   //FIXME: 세션아이디 확인
-  if (true) {
+  if (userId === 'admin' && password === '1234') {
+    //   if (true) {
+    console.log('login success');
     returnResInfo.userInfo = {
       user_name: '관리자',
       mainSeq: '0',
       grade: 'manager'
     };
-
-    setTimeout(() => {
-      res.json(returnResInfo);
-    }, 4000);
+    testSession = req.sessionID;
+    res.json(returnResInfo);
+  } else {
+    res.status(500).send('error');
   }
 });
 
 app.get(['/main', '/main/0', '/main/1'], (req, res) => {
-  console.log('MIAN_REQUEST');
   const returnResInfo = {
     headerInfo: {
       headerEnv: {},
@@ -97,8 +101,11 @@ app.get(['/main', '/main/0', '/main/1'], (req, res) => {
   returnResInfo.containerInfo.growthEnv = {};
 
   //FIXME:
+  //   if (testSession === '-9JezgA-Gkc-d73EfoTaRo2LarL6-jBL') {
   res.json(returnResInfo);
+  //   } else {
   // res.status(500).send('error');
+  //   }
 });
 
 app.get(['/trend', '/trend/0', '/trend/1'], (req, res) => {
