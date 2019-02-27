@@ -1,9 +1,9 @@
-const path = require('path');
-const bodyParser = require('body-parser');
-var express = require('express');
-var parseurl = require('parseurl');
-var session = require('express-session');
-const _ = require('lodash');
+const path = require("path");
+const bodyParser = require("body-parser");
+var express = require("express");
+var parseurl = require("parseurl");
+var session = require("express-session");
+const _ = require("lodash");
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,7 +13,7 @@ let testSession;
 
 app.use(
   session({
-    secret: 'keyboard cat',
+    secret: "keyboard cat",
     resave: true,
     saveUninitialized: true
     // cookie: { secure: true }
@@ -34,43 +34,52 @@ app.use(function(req, res, next) {
 
 app.use(express.static(path.resolve(DIST_DIR)));
 
-app.get(['/auth/logout'], (req, res) => {
-  console.log('logout');
+app.get(["/app/auth/logout"], (req, res) => {
+  console.log("logout");
 
   setTimeout(() => {
-    res.json('ok');
+    res.json("ok");
   }, 2000);
 });
-app.post(['/auth/login'], (req, res) => {
-  console.log('LOGIN_REQUEST');
+app.post(["/auth/login"], (req, res) => {
+  console.log("LOGIN_REQUEST");
   const { userId, password } = req.body;
   console.log(req.body);
-  const returnResInfo = {
-    userInfo: {}
-  };
+  const returnResInfo = {};
 
   //FIXME: 세션아이디 확인
-  if (userId === 'admin' && password === '1234') {
+  if (userId === "admin" && password === "1234") {
     setTimeout(() => {
-      console.log('login success');
-      returnResInfo.userInfo = {
-        user_name: '관리자',
-        mainSeq: '0',
-        grade: 'manager'
+      console.log("login success");
+      returnResInfo = {
+        name: "관리자",
+        main_seq: "0",
+        grade: "manager"
       };
       testSession = req.sessionID;
       res.json(returnResInfo);
     }, 2000);
   } else {
-    res.status(500).send('error');
+    res.status(500).send("error");
   }
 });
 
-app.get(['/main', '/main/0', '/main/1'], (req, res) => {
+app.get(["/app/main", "/app/main/0", "/app/main/2"], (req, res) => {
   const returnResInfo = {
     headerInfo: {
-      headerEnv: {},
-      placeList: [{}]
+      headerEnv: {
+        currWeatherCastInfo: {
+          inclinedSolar: 0,
+          ws: 0,
+          wf: 0,
+          temp: 0
+        }
+      },
+      headerMenu: {
+        naviId: undefined,
+        siteId: undefined,
+        siteList: undefined
+      }
     },
     containerInfo: {
       powerGenerationInfo: {},
@@ -78,21 +87,21 @@ app.get(['/main', '/main/0', '/main/1'], (req, res) => {
     }
   };
 
-  returnResInfo.headerInfo.placeList = [
+  returnResInfo.headerInfo.headerMenu.siteList = [
     {
       //FIXME: 일단 생각없이 적어보자 ㅡㅡ..
       //TODO: 장소 정보 (mainSeq, placeName, company, amount) or siteName?
-      placeName: '6kW급 테스트베드 (나주)',
-      mainSeq: '0'
+      name: "6kW급 테스트베드 (나주)",
+      siteId: "0"
     },
     {
       //FIXME: 일단 생각없이 적어보자 ㅡㅡ..
       //TODO: 장소 정보 (mainSeq, placeName, company, amount) or siteName?
-      placeName: '12kW급 테스트베드 (목포)',
-      mainSeq: '1'
+      name: "12kW급 테스트베드 (목포)",
+      siteId: "1"
     }
   ];
-  returnResInfo.headerInfo.headerEnv = {
+  returnResInfo.headerInfo.headerEnv.currWeatherCastInfo = {
     inclinedSolar: _.random(0, 100), // 경사 일사량,
     ws: _.random(0, 100), // 풍속
     temp: _.random(0, 100), // 기온
@@ -109,12 +118,12 @@ app.get(['/main', '/main/0', '/main/1'], (req, res) => {
   returnResInfo.containerInfo.growthEnv = {};
 
   setTimeout(() => {
-    // res.json(returnResInfo);
-    res.status(500).send('hi');
+    res.json(returnResInfo);
+    // res.status(500).send("hi");
   }, 2000);
 });
 
-app.get(['/trend', '/trend/0', '/trend/1'], (req, res) => {
+app.get(["/trend", "/trend/0", "/trend/1"], (req, res) => {
   const returnResInfo = {
     headerInfo: {
       headerEnv: {},
@@ -148,68 +157,21 @@ app.get(['/trend', '/trend/0', '/trend/1'], (req, res) => {
   res.json(returnResInfo);
 });
 
-app.get(['/fieldView', '/fieldView/0', '/fieldView/1'], (req, res) => {
-  console.log('Request!!!');
+app.get(["/fieldView", "/fieldView/0", "/fieldView/1"], (req, res) => {
+  console.log("Request!!!");
   const returnResInfo = {};
   res.json(returnResInfo);
 });
 
-app.post(['/control/', '/control/0', '/control/1'], (req, res) => {
+app.post(["/app/control/", "/app/control/0", "/app/control/1"], (req, res) => {
   console.log(req.body);
-  res.json('hihi');
+  res.json("hihi");
 });
-app.post(['/control/off', '/control/off/0', '/control/off/1'], (req, res) => {
+app.post(["/app/control/", "/app/control/0", "/app/control/1"], (req, res) => {
   console.log(req.body);
-  res.json('hihi');
-});
-// app.post('/auth', (req, res) => {
-//   console.dir(req.sessionID);
-//   console.log(req.body);
-
-//   const { userId, password } = req.body;
-//   const returnUserInfo = {
-//     commandId: null,
-//     isError: 1,
-//     contents: 'check your id/pw'
-//   };
-
-//   if (userId === 'a' && password === 'a') {
-//     returnUserInfo.isError = 0;
-//     returnUserInfo.contents = {
-//       session_id: 'asdfasdf',
-//       main_seq: 1,
-//       user_name: '관리자',
-//       grade: 'manager',
-//       connectUrl: 'app/main'
-//       // sessionId: 'asjdkhask',
-//     };
-//   }
-
-//   res.json(returnUserInfo);
-// });
-
-app.post('/auth', (req, res) => {
-  // const { userId, password } = req.body;
-  // console.log(userid, password);
-  // const returnUserInfo = {
-  //   commandId: null,
-  //   isError: 1,
-  //   contents: 'check your id/pw'
-  // };
-  // if (userId === 'a' && password === 'a') {
-  //   returnUserInfo.isError = 0;
-  //   returnUserInfo.contents = {
-  //     session_id: 'asdfasdf',
-  //     main_seq: 1,
-  //     user_name: '관리자',
-  //     grade: 'manager',
-  //     connectUrl: 'app/main'
-  //     // sessionId: 'asjdkhask',
-  //   };
-  // }
-  // res.json(returnUserInfo);
+  res.json("hihi");
 });
 
 app.listen(PORT, () => {
-  console.log('Server Listen', PORT);
+  console.log("Server Listen", PORT);
 });
