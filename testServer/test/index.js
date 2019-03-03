@@ -1,9 +1,9 @@
-const path = require('path');
-const bodyParser = require('body-parser');
-var express = require('express');
-var parseurl = require('parseurl');
-var session = require('express-session');
-const _ = require('lodash');
+const path = require("path");
+const bodyParser = require("body-parser");
+var express = require("express");
+var parseurl = require("parseurl");
+var session = require("express-session");
+const _ = require("lodash");
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,7 +13,7 @@ let testSession;
 
 app.use(
   session({
-    secret: 'keyboard cat',
+    secret: "keyboard cat",
     resave: true,
     saveUninitialized: true
     // cookie: { secure: true }
@@ -34,38 +34,38 @@ app.use(function(req, res, next) {
 
 app.use(express.static(path.resolve(DIST_DIR)));
 
-app.get(['/app/auth/logout'], (req, res) => {
-  console.log('logout');
+app.get(["/app/auth/logout"], (req, res) => {
+  console.log("logout");
 
   setTimeout(() => {
-    res.json('ok');
+    res.json("ok");
   }, 2000);
 });
-app.post(['/auth/login'], (req, res) => {
-  console.log('LOGIN_REQUEST');
+app.post(["/auth/login"], (req, res) => {
+  console.log("LOGIN_REQUEST");
   const { user_id, password } = req.body;
   console.log(req.body);
   let returnResInfo;
 
   //FIXME: 세션아이디 확인
-  if (user_id === 'admin' && password === '1234') {
+  if (user_id === "admin" && password === "1234") {
     setTimeout(() => {
-      console.log('login success');
+      console.log("login success");
       returnResInfo = {
-        name: '관리자',
-        main_seq: '0',
-        grade: 'manager'
+        name: "관리자",
+        main_seq: "0",
+        grade: "manager"
       };
       testSession = req.sessionID;
       res.json(returnResInfo);
     }, 2000);
   } else {
-    console.log('login fail');
-    res.status(500).send('error');
+    console.log("login fail");
+    res.status(500).send("error");
   }
 });
 
-app.get(['/app/main', '/app/main/0', '/app/main/2'], (req, res) => {
+app.get(["/app/main", "/app/main/0", "/app/main/2"], (req, res) => {
   const returnResInfo = {
     headerInfo: {
       headerEnv: {
@@ -87,14 +87,14 @@ app.get(['/app/main', '/app/main/0', '/app/main/2'], (req, res) => {
       growthEnv: {}
     }
   };
-
+  returnResInfo.headerInfo.headerMenu.siteId = "all";
   returnResInfo.headerInfo.headerMenu.siteList = [
     {
       //FIXME: 일단 생각없이 적어보자 ㅡㅡ..
       //TODO: 장소 정보 (mainSeq, placeName, company, amount) or siteName?
-      name: '6kW급 테스트베드 (나주)',
-      siteId: '0'
-    },
+      name: "6kW급 테스트베드 (나주)",
+      siteId: "0"
+    }
   ];
   returnResInfo.headerInfo.headerEnv.currWeatherCastInfo = {
     inclinedSolar: _.random(0, 100), // 경사 일사량,
@@ -104,7 +104,7 @@ app.get(['/app/main', '/app/main/0', '/app/main/2'], (req, res) => {
   };
   returnResInfo.containerInfo.powerGenerationInfo = {
     currKw: _.random(0, 10), //현재발전량 = 현재출력
-    currKwMax: _.random(0, 10), //현재 최대 발전량
+    currKwYaxisMax: 10, //현재 최대 발전량
     dailyPower: _.random(0, 100), //금일발전량
     monthPower: _.random(0, 100), //당월발전량
     comulativePower: _.random(0, 100) //누적발전량
@@ -118,55 +118,71 @@ app.get(['/app/main', '/app/main/0', '/app/main/2'], (req, res) => {
   }, 2000);
 });
 
-app.get(['/app/trend', '/app/trend/0', '/app/trend/1'], (req, res) => {
-  const returnResInfo = {
-    headerInfo: {
-      headerEnv: {},
-      placeList: [{}]
-    },
-    containerInfo: {
-      solarChartInfo: {}, // 일사량 차트 정보
-      luxChartInfo: {}, // 조도 차트 정보
-      waterValueChartInfo: {}, // 양액 농도 차트 정보
-      temperatureChartInfo: {}, // 온도 차트 정보
-      rehChartInfo: {}, // 습도 차트 정보
-      windSpeedChartInfo: {}, // 풍속 차트 정보
-      co2ChartInfo: {}, // 이산화탄소 차트 정보
-      r1ChartInfo: {}, // 시간당 강우량 차트 정보
-      isRainChartInfo: {} // 강우 감지 여부 차트 정보
-    }
-  };
+app.get(
+  ["/app/trend", "/app/trend/0", "/app/trend/1", "/app/trend/all"],
+  (req, res) => {
+    console.log("hihi");
+    const returnResInfo = {
+      headerInfo: {
+        headerEnv: {},
+        placeList: [{}]
+      },
+      containerInfo: {
+        inverterTrendList: [],
+        sensorTrendList: []
+      }
+    };
 
-  returnResInfo.containerInfo = {
-    solarChartInfo: {},
-    luxChartInfo: {},
-    waterValueChartInfo: {},
-    temperatureChartInfo: {},
-    rehChartInfo: {},
-    windSpeedChartInfo: {},
-    co2ChartInfo: {},
-    r1ChartInfo: {},
-    isRainChartInfo: {}
-  };
+    returnResInfo.containerInfo.sensorTrendList = [
+      {
+        domId: "solarChart",
+        title: "일사량 정보",
+        subtitle: "경사량 일사량, 수평일사량, 모듈 하부 일사량",
+        yAxis: [{ yTitle: "일사랑", dataUnit: "W/m²" }],
+        series: [
+          {
+            name: "경사 일사량 001",
+            color: "#212529",
+            tooltip: { valueSuffix: " W/m²" },
+            data: [[1550041200000, 0], [1550041200020, 10]]
+          }
+        ]
+      },
+      {
+        domId: "solarChart",
+        title: "Test Graph",
+        subtitle: "경사량 일사량, 수평일사량, 모듈 하부 일사량",
+        yAxis: [{ yTitle: "일사랑", dataUnit: "W/m²" }],
+        series: [
+          {
+            name: "경사 일사량 001",
+            color: "#212529",
+            tooltip: { valueSuffix: " W/m²" },
+            data: [[1550041200000, 0], [1550041200020, 10]]
+          }
+        ]
+      }
+    ];
 
-  res.json(returnResInfo);
-});
+    res.json(returnResInfo);
+  }
+);
 
-app.get(['/fieldView', '/fieldView/0', '/fieldView/1'], (req, res) => {
-  console.log('Request!!!');
+app.get(["/fieldView", "/fieldView/0", "/fieldView/1"], (req, res) => {
+  console.log("Request!!!");
   const returnResInfo = {};
   res.json(returnResInfo);
 });
 
-app.post(['/app/control/', '/app/control/0', '/app/control/1'], (req, res) => {
+app.post(["/app/control/", "/app/control/0", "/app/control/1"], (req, res) => {
   console.log(req.body);
-  res.json('hihi');
+  res.json("hihi");
 });
-app.post(['/app/control/', '/app/control/0', '/app/control/1'], (req, res) => {
+app.post(["/app/control/", "/app/control/0", "/app/control/1"], (req, res) => {
   console.log(req.body);
-  res.json('hihi');
+  res.json("hihi");
 });
 
 app.listen(PORT, () => {
-  console.log('Server Listen', PORT);
+  console.log("Server Listen", PORT);
 });
