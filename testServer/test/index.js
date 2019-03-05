@@ -121,7 +121,16 @@ app.get(
       comulativePower: _.random(0, 100) //누적발전량
       //농지 현황 그래프 데이터
     };
-    returnResInfo.containerInfo.growthEnv = {};
+    returnResInfo.containerInfo.growthEnv = {
+      lux: 1576.4,
+      co2: 388,
+      soilWaterValue: _.random(0, 100),
+      soilTemperature: _.random(0, 40),
+      soilReh: _.random(0, 100),
+      outsideAirTemperature: _.random(0, 40),
+      outsideAirReh: _.random(0, 100),
+      inclinedSolar: 861.1
+    };
 
     setTimeout(() => {
       res.json(returnResInfo);
@@ -176,14 +185,33 @@ app.get(['/fieldView', '/fieldView/0', '/fieldView/1'], (req, res) => {
   res.json(returnResInfo);
 });
 
-app.post(['/app/control/', '/app/control/0', '/app/control/1'], (req, res) => {
-  console.log(req.body);
-  res.json('hihi');
-});
-app.post(['/app/control/', '/app/control/0', '/app/control/1'], (req, res) => {
-  console.log(req.body);
-  res.json('hihi');
-});
+app.get(
+  ['/app/control/0', '/app/control/1', , '/app/control/all'],
+  (req, res) => {
+    console.log('hihi');
+    const pump = 0;
+    res.json(pump);
+  }
+);
+
+app.post(
+  ['/app/control/', '/app/control/0', '/app/control/1', '/app/control/all'],
+  (req, res) => {
+    console.log(req.body);
+    setTimeout(() => {
+      res.json('hihi');
+    }, 2000);
+  }
+);
+app.post(
+  ['/app/control/', '/app/control/0', '/app/control/1', '/app/control/all'],
+  (req, res) => {
+    console.log(req.body);
+    setTimeout(() => {
+      res.json('hihi');
+    }, 2000);
+  }
+);
 
 app.listen(PORT, () => {
   console.log('Server Listen', PORT);
