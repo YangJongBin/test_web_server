@@ -61,6 +61,15 @@ app.post(['/auth/login'], (req, res) => {
       testSession = req.sessionID;
       res.json(returnResInfo);
     }, 2000);
+  } else if (user_id === 'yj.lee' && password === '1234') {
+    returnResInfo = {
+      name: '관리자',
+      main_seq: '0',
+      grade: 'manager',
+      nick_name: '바보유진',
+      user_id: 'yj.lee'
+    };
+    res.json(returnResInfo);
   } else {
     console.log('login fail');
     res.status(500).send('error');
@@ -134,7 +143,7 @@ app.get(
 
     setTimeout(() => {
       res.json(returnResInfo);
-      //   res.status(500).send('hi');
+      //   res.status(200).send('hi');
     }, 2000);
   }
 );
